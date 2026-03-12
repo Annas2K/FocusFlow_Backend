@@ -34,4 +34,12 @@ public class ProjectEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TaskEntity> tasks;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "project_members", // Hibernate sẽ tự đẻ ra bảng trung gian này
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @JsonIgnore // Nhớ cái bùa chống lặp vô tận này không?
+    private List<UserEntity> members;
 }

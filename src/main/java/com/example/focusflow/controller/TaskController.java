@@ -1,6 +1,7 @@
 package com.example.focusflow.controller;
 
 import com.example.focusflow.entity.TaskEntity;
+import com.example.focusflow.enums.TaskStatus;
 import com.example.focusflow.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,5 +39,20 @@ public class TaskController {
     @GetMapping("/project/{projectId}")
     public List<TaskEntity> getTasksByProjectId(@PathVariable Long projectId) {
         return taskService.getTasksByProjectId(projectId);
+    }
+
+    // Chạy khi gọi PUT: http://localhost:8080/api/tasks/1/assign/2
+    @PutMapping("/{taskId}/assign/{userId}")
+    public TaskEntity assignTask(@PathVariable Long taskId, @PathVariable Long userId) {
+        return taskService.assignTask(taskId, userId);
+    }
+
+    // Chạy khi gọi PATCH: http://localhost:8080/api/tasks/1/status?newStatus=IN_PROGRESS
+    @PatchMapping("/{taskId}/status")
+    public TaskEntity updateTaskStatus(
+            @PathVariable Long taskId,
+            @RequestParam TaskStatus newStatus) {
+
+        return taskService.updateTaskStatus(taskId, newStatus);
     }
 }

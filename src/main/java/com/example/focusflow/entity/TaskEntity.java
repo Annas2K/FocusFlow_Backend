@@ -1,5 +1,6 @@
 package com.example.focusflow.entity;
 
+import com.example.focusflow.enums.TaskStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +24,9 @@ public class TaskEntity {
     @Column(nullable = false)
     private String title;
 
-    private String status; // TODO, IN_PROGRESS, DONE
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TaskStatus status;
     private String priority; // LOW, MEDIUM, HIGH
 
     private LocalDateTime deadline;
