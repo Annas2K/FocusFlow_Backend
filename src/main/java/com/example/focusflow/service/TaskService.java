@@ -4,12 +4,14 @@ import com.example.focusflow.entity.ProjectEntity;
 import com.example.focusflow.entity.TaskEntity;
 import com.example.focusflow.entity.UserEntity;
 import com.example.focusflow.enums.TaskStatus;
+import com.example.focusflow.exception.AppException;
 import com.example.focusflow.repository.ProjectRepository;
 import com.example.focusflow.repository.TaskRepository;
 import com.example.focusflow.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -44,6 +46,15 @@ public class TaskService {
         // 1. Kiểm tra xem payload gửi lên có chứa Project ID không
         if (newTask.getProject() == null || newTask.getProject().getId() == null) {
             throw new RuntimeException("Lỗi: Tạo Task bắt buộc phải truyền kèm Project ID!");
+        }
+
+        // ĐÂY LÀ MỤC 3: CUSTOM RULE - VALIDATE DEADLINE > CURRENT DATE
+        if (newTask.getDeadline() != null) {
+            // Lấy thời gian hiện tại của hệ thống
+            LocalDateTime now = LocalDateTime.now();
+            if (newTask.getDeadline().isBefore(now)) {
+                throw new AppException(400, "Deadline không thể nằm trong quá khứ được! Mày định bắt nhân viên du hành thời gian à?");
+            }
         }
 
         Long projectId = newTask.getProject().getId();
@@ -107,5 +118,7 @@ public class TaskService {
         // Lưu lại xuống DB
         return taskRepository.save(task);
     }
+
+
 
 }
