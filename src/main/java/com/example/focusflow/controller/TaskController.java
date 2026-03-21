@@ -81,4 +81,14 @@ public class TaskController {
                 .result(taskService.updateTaskStatus(taskId, newStatus))
                 .build();
     }
+
+    // API xem task cá nhân
+    @GetMapping("/my-tasks")
+    public ApiResponse<List<TaskEntity>> getMyTasks() {
+        return ApiResponse.<List<TaskEntity>>builder()
+                .code(200)
+                .message("Đây là danh sách việc của riêng mày!")
+                .result(taskService.getMyTasks())
+                .build();
+    }
 }

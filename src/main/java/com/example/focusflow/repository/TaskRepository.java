@@ -14,4 +14,7 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
     // Tìm tất cả Task thuộc về 1 Project
     List<TaskEntity> findByProjectId(Long projectId);
+
+    // Tìm toàn bộ Task dựa theo tên đăng nhập của User
+    List<TaskEntity> findByUserUsername(String username);
 }

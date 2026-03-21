@@ -9,6 +9,7 @@ import com.example.focusflow.repository.ProjectRepository;
 import com.example.focusflow.repository.TaskRepository;
 import com.example.focusflow.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -118,7 +119,14 @@ public class TaskService {
         // Lưu lại xuống DB
         return taskRepository.save(task);
     }
+    public List<TaskEntity> getMyTasks() {
+        // 1. Lấy username của thằng đang cầm Token gọi API
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
+        // 2. Thay vì trả về hết, mày chỉ tìm những Task thuộc về username này
+        // Mày cần viết thêm hàm findByUserUsername trong TaskRepository nhé
+        return taskRepository.findByUserUsername(currentUsername);
+    }
 
 
 }
