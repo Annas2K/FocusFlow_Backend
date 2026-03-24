@@ -26,6 +26,6 @@ public class ProjectService {
     // Tìm Project theo ID (Sau này nhét Task vào Project sẽ cần hàm này)
     public ProjectEntity getProjectById(Long id) {
         return projectRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Đéo tìm thấy Project có ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Project có ID: " + id));
     }
 }

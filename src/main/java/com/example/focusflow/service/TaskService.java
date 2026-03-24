@@ -42,38 +42,25 @@ public class TaskService {
         return taskRepository.findByProjectId(projectId);
     }
 
-    // ĐÂY CHÍNH LÀ MỤC 3 & 4: IMPLEMENT TẠO TASK + VALIDATE PROJECT ID
-    public TaskEntity createTask(TaskEntity newTask) {
-        // 1. Kiểm tra xem payload gửi lên có chứa Project ID không
-        if (newTask.getProject() == null || newTask.getProject().getId() == null) {
+    // ĐÂY CHÍNH LÀ MỤC 3 & 4:
+    public TaskEntity createTask(TaskEntity task) {
+        // 1. Kiểm tra Project
+        if (task.getProject() == null || task.getProject().getId() == null) {
             throw new RuntimeException("Lỗi: Tạo Task bắt buộc phải truyền kèm Project ID!");
         }
 
-        // ĐÂY LÀ MỤC 3: CUSTOM RULE - VALIDATE DEADLINE > CURRENT DATE
-        if (newTask.getDeadline() != null) {
-            // Lấy thời gian hiện tại của hệ thống
-            LocalDateTime now = LocalDateTime.now();
-            if (newTask.getDeadline().isBefore(now)) {
-                throw new AppException(400, "Deadline không thể nằm trong quá khứ được! Mày định bắt nhân viên du hành thời gian à?");
-            }
-        }
+        // 2. Lấy thằng đang cầm Token gọi API
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Long projectId = newTask.getProject().getId();
+        // 3. Tìm thằng User đó trong DB
+        UserEntity currentUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("không tìm thấy User!"));
 
-        // 2. Validate Project ID tồn tại
-        ProjectEntity project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Đéo tìm thấy Project nào có ID: " + projectId));
+        // 4. Gán chủ sở hữu cho task
+        task.setUser(currentUser);
 
-        // 3. Ép luật (Business Rule): Task mới tạo mặc định phải là TODO
-        if (newTask.getStatus() == null) {
-            newTask.setStatus(TaskStatus.TODO);
-        }
-
-        // 4. Gắn lại project chuẩn từ DB vào để an toàn tuyệt đối
-        newTask.setProject(project);
-
-        // Lưu vào DB
-        return taskRepository.save(newTask);
+        // 5. Lưu xuống DB
+        return taskRepository.save(task);
     }
 
     // ĐÂY LÀ MỤC 5 & 6: ASSIGN TASK VÀ CHECK USER THUỘC PROJECT
@@ -123,8 +110,7 @@ public class TaskService {
         // 1. Lấy username của thằng đang cầm Token gọi API
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        // 2. Thay vì trả về hết, mày chỉ tìm những Task thuộc về username này
-        // Mày cần viết thêm hàm findByUserUsername trong TaskRepository nhé
+        // 2. Thay vì trả về hết chỉ tìm những Task thuộc về username này
         return taskRepository.findByUserUsername(currentUsername);
     }
 

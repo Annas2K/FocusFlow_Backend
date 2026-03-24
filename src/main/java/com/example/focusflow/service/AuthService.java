@@ -26,10 +26,10 @@ public class AuthService {
     private RoleRepository roleRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder; // Gọi máy băm ra
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private JwtUtil jwtUtil; // Gọi máy in vé ra (MỤC TẠO JWT)
+    private JwtUtil jwtUtil;
 
     // ================== ĐĂNG KÝ ==================
     public UserEntity register(RegisterRequest request) {
@@ -50,7 +50,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         // 3. Cấp quyền mặc định là ROLE_USER
-        RoleEntity userRole = roleRepository.findByName("ROLE_MANAGER")
+        RoleEntity userRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new AppException(500, "Lỗi hệ thống: Role đâu?!"));
         Set<RoleEntity> roles = new HashSet<>();
         roles.add(userRole);

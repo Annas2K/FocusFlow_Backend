@@ -40,6 +40,4 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<RoleEntity> roles;
-
-    // ⚠️ LƯU Ý: Nếu ở dưới mày có đoạn code nối bảng @OneToMany với Task hay @ManyToMany với Project của mấy tuần trước thì mày cứ dán nối tiếp vào đây nhé, đừng có xóa của tao!
 }
