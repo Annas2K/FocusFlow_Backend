@@ -14,9 +14,7 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    // Chữ ký bí mật (Phải dài dằng dặc thì thuật toán nó mới chịu nhé, cấm đổi ngắn hơn)
     private static final String SECRET_KEY = "DayLaMotCaiChuKyBiMatCucKyDaiCuaDuAnFocusFlowDeKhongBiHack123456";
-    // Thời gian sống của Token (Ví dụ tao để 24 tiếng)
     private static final long JWT_EXPIRATION = 1000 * 60 * 60 * 24;
 
     // 1. Hàm tạo Token (In vé)

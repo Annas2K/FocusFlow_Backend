@@ -31,11 +31,14 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                // App mình xài JWT (vé cầm tay) nên đéo cần lưu Session (nhớ mặt) nữa
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Đăng ký, Đăng nhập ai cũng vào được
                         .requestMatchers("/error").permitAll()
+
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
 
                         // PHÂN QUYỀN (MỤC: MANAGER tạo project)
                         // Chỉ mấy thằng mang thẻ ROLE_MANAGER mới được vác mặt vào gọi API POST /api/projects
@@ -45,7 +48,6 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 );
 
-        // Lệnh cực kỳ quan trọng: Nhét thằng bảo vệ soi vé lên đứng trước thằng bảo vệ gốc của Spring
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
